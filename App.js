@@ -1,14 +1,47 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  NetInfo,
+  AsyncStorage
+} from 'react-native';
+import firebase from 'firebase';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './src/navigation/AppNavigator';
 
 export default class App extends React.Component {
   state = {
-    isLoadingComplete: false
+    isLoadingComplete: false,
+    loggedIn: null
   };
 
+  componentWillMount() {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyAeCzYzJlahbRoiyoyO1w9XkpbgiO7E-L4',
+      authDomain: 'authentication-54e62.firebaseapp.com',
+      databaseURL: 'https://authentication-54e62.firebaseio.com',
+      projectId: 'authentication-54e62',
+      storageBucket: 'authentication-54e62.appspot.com',
+      messagingSenderId: '780912054898'
+    });
+
+    firebase.auth().onAuthStateChanged(user => this.setState({ user }));
+  }
+
+  componentDidMount() {
+    NetInfo.isConnected.fetch().then(this.handleNetworkChange);
+    NetInfo.isConnected.addEventListener(
+      'connectionChange',
+      this.handleNetworkChange
+    );
+  }
+
+  handleNetworkChange = connected => this.setState({ connected });
+
   render() {
+    const { connected } = this.state;
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -21,7 +54,7 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
+          <AppNavigator screenProps={{ connected }} />
         </View>
       );
     }

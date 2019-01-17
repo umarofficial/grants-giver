@@ -12,9 +12,13 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@material-ui/core": "^3.8.3",
     "expo": "^31.0.2",
+    "firebase": "^5.7.0",
     "react": "16.5.0",
+    "react-dom": "^16.7.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react-native-easy-toast": "^1.1.0",
     "react-navigation": "^2.18.2"
   },
   "devDependencies": {
